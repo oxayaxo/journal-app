@@ -39,9 +39,10 @@ export default function JournalClient({ user, todayEntry }: Props) {
   const supabase = createClient()
 
   const [mood, setMood] = useState(todayEntry?.mood || '')
-  const [praises, setPraises] = useState<string[]>(todayEntry?.praises || ['', '', ''])
-  const [gratitudes, setGratitudes] = useState<string[]>(todayEntry?.gratitudes || ['', '', ''])
-  const [wishes, setWishes] = useState<string[]>(todayEntry?.wishes || ['', '', ''])
+  const pad3 = (arr?: string[]) => { const a = [...(arr || [])]; while (a.length < 3) a.push(''); return a }
+  const [praises, setPraises] = useState<string[]>(pad3(todayEntry?.praises))
+  const [gratitudes, setGratitudes] = useState<string[]>(pad3(todayEntry?.gratitudes))
+  const [wishes, setWishes] = useState<string[]>(pad3(todayEntry?.wishes))
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(!!todayEntry)
 
