@@ -90,7 +90,7 @@ export default function JournalClient({ user, todayEntry }: Props) {
         <nav className="flex items-center gap-3">
           <Link href="/journal/history" className="text-sm text-gray-500 hover:text-amber-600">振り返り</Link>
           <Link href="/community" className="text-sm text-gray-500 hover:text-amber-600">みんな</Link>
-          <button onClick={handleSignOut} className="text-xs text-gray-400 hover:text-gray-600">ログアウト</button>
+          <Link href="/profile" className="text-sm text-gray-500 hover:text-amber-600">設定</Link>
         </nav>
       </header>
 
