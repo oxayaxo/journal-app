@@ -9,6 +9,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isForgot, setIsForgot] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const router = useRouter()
@@ -38,6 +39,21 @@ export default function AuthPage() {
         router.push('/journal')
         router.refresh()
       }
+    }
+    setLoading(false)
+  }
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setMessage('')
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset`,
+    })
+    if (error) {
+      setMessage('エラーが発生しました')
+    } else {
+      setMessage(`${email} にリセット用のメールを送りました！`)
     }
     setLoading(false)
   }
@@ -114,7 +130,54 @@ export default function AuthPage() {
           >
             {loading ? '処理中...' : isSignUp ? 'アカウントを作成' : 'ログイン'}
           </button>
+
+          {!isSignUp && (
+            <button
+              type="button"
+              onClick={() => { setIsForgot(true); setMessage('') }}
+              className="w-full text-sm text-gray-400 hover:text-amber-600 pt-1"
+            >
+              パスワードを忘れた方はこちら
+            </button>
+          )}
         </form>
+
+        {/* パスワード忘れモーダル */}
+        {isForgot && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+              <h2 className="font-bold text-gray-800 mb-1">パスワードをリセット</h2>
+              <p className="text-xs text-gray-400 mb-4">登録したメールアドレスを入力してください</p>
+              <form onSubmit={handleForgot} className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  placeholder="example@email.com"
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+                />
+                {message && (
+                  <p className="text-sm text-amber-700 bg-amber-50 rounded-lg p-3">{message}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-amber-400 hover:bg-amber-500 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {loading ? '送信中...' : 'リセットメールを送る'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setIsForgot(false); setMessage('') }}
+                  className="w-full text-sm text-gray-400 hover:text-gray-600"
+                >
+                  キャンセル
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
