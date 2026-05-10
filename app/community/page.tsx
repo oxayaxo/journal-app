@@ -12,9 +12,9 @@ export default async function CommunityPage() {
     .from('profiles')
     .select('id, name')
 
-  // 今月の全エントリーの日付とユーザーIDを取得（entry_datesビューを使用）
-  const now = new Date()
-  const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+  // 今月の全エントリーの日付とユーザーIDを取得（entry_datesビューを使用・JST基準）
+  const now = new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+  const monthStart = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-01`
   const { data: entries } = await supabase
     .from('entry_dates')
     .select('user_id, date')

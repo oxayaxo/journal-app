@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { getJSTDateString } from '@/lib/date'
 import JournalClient from './JournalClient'
 
 export default async function JournalPage() {
@@ -8,7 +9,7 @@ export default async function JournalPage() {
 
   if (!user) redirect('/auth')
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getJSTDateString()
   const { data: todayEntry } = await supabase
     .from('journal_entries')
     .select('*')

@@ -26,9 +26,15 @@ type Props = {
   todayEntry: Entry | null
 }
 
+function getJSTToday() {
+  const now = new Date()
+  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000)
+  return jst
+}
+
 export default function JournalClient({ user, todayEntry }: Props) {
-  const today = new Date()
-  const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`
+  const today = getJSTToday()
+  const dateStr = `${today.getUTCFullYear()}年${today.getUTCMonth() + 1}月${today.getUTCDate()}日`
   const router = useRouter()
   const supabase = createClient()
 

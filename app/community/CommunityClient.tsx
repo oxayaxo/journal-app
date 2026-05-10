@@ -12,15 +12,20 @@ type Props = {
   entries: Entry[]
 }
 
+function getJSTToday() {
+  const jst = new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+  return jst
+}
+
 export default function CommunityClient({ currentUserId, profiles, entries }: Props) {
-  const today = new Date()
-  const [viewYear, setViewYear] = useState(today.getFullYear())
-  const [viewMonth, setViewMonth] = useState(today.getMonth())
+  const today = getJSTToday()
+  const [viewYear, setViewYear] = useState(today.getUTCFullYear())
+  const [viewMonth, setViewMonth] = useState(today.getUTCMonth())
 
   const firstDay = new Date(viewYear, viewMonth, 1).getDay()
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
   const monthLabel = `${viewYear}年${viewMonth + 1}月`
-  const todayStr = today.toISOString().split('T')[0]
+  const todayStr = today.toISOString().split('T')[0] // JSTで+9h済みなのでそのまま使える
 
   function prevMonth() {
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) }
