@@ -24,6 +24,7 @@ type Detail = {
   praises: string[]
   gratitudes: string[]
   wishes: string[]
+  note: string
 }
 
 const pad3 = (arr?: string[]) => { const a = [...(arr || [])]; while (a.length < 3) a.push(''); return a }
@@ -40,6 +41,7 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
   const [editPraises, setEditPraises] = useState(['', '', ''])
   const [editGratitudes, setEditGratitudes] = useState(['', '', ''])
   const [editWishes, setEditWishes] = useState(['', '', ''])
+  const [editNote, setEditNote] = useState('')
   const [saving, setSaving] = useState(false)
   const supabase = createClient()
 
@@ -80,6 +82,7 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
     setEditPraises(pad3(detail.praises))
     setEditGratitudes(pad3(detail.gratitudes))
     setEditWishes(pad3(detail.wishes))
+    setEditNote(detail.note || '')
     setEditing(true)
   }
 
@@ -91,6 +94,7 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
       praises: editPraises.filter(Boolean),
       gratitudes: editGratitudes.filter(Boolean),
       wishes: editWishes.filter(Boolean),
+      note: editNote,
     }).eq('id', detail.id)
     setDetail({
       ...detail,
@@ -98,6 +102,7 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
       praises: editPraises.filter(Boolean),
       gratitudes: editGratitudes.filter(Boolean),
       wishes: editWishes.filter(Boolean),
+      note: editNote,
     })
     setEditing(false)
     setSaving(false)
@@ -203,6 +208,15 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
                 <EditSection label="⭐ 自分褒め" values={editPraises} onChange={setEditPraises} />
                 <EditSection label="🙏 感謝" values={editGratitudes} onChange={setEditGratitudes} />
                 <EditSection label="🌟 願望" values={editWishes} onChange={setEditWishes} />
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">💬 今日の一言</p>
+                  <textarea
+                    value={editNote}
+                    onChange={e => setEditNote(e.target.value)}
+                    rows={3}
+                    className="w-full border border-gray-100 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-200 resize-none"
+                  />
+                </div>
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setEditing(false)}
@@ -228,6 +242,12 @@ export default function HistoryClient({ datesWithEntry, entries, userId }: Props
                 {renderList('⭐ 自分褒め', detail.praises)}
                 {renderList('🙏 感謝', detail.gratitudes)}
                 {renderList('🌟 願望', detail.wishes)}
+                {detail.note && (
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">💬 今日の一言</p>
+                    <p className="text-gray-700">{detail.note}</p>
+                  </div>
+                )}
               </div>
             ) : null}
           </div>

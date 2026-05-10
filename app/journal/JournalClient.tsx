@@ -19,6 +19,7 @@ type Entry = {
   praises: string[]
   gratitudes: string[]
   wishes: string[]
+  note: string
 }
 
 type Props = {
@@ -43,6 +44,7 @@ export default function JournalClient({ user, todayEntry }: Props) {
   const [praises, setPraises] = useState<string[]>(pad3(todayEntry?.praises))
   const [gratitudes, setGratitudes] = useState<string[]>(pad3(todayEntry?.gratitudes))
   const [wishes, setWishes] = useState<string[]>(pad3(todayEntry?.wishes))
+  const [note, setNote] = useState(todayEntry?.note || '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(!!todayEntry)
 
@@ -58,6 +60,7 @@ export default function JournalClient({ user, todayEntry }: Props) {
       praises: praises.filter(Boolean),
       gratitudes: gratitudes.filter(Boolean),
       wishes: wishes.filter(Boolean),
+      note,
     }
 
     if (todayEntry?.id) {
@@ -145,6 +148,19 @@ export default function JournalClient({ user, todayEntry }: Props) {
           onChange={setWishes}
           placeholder={(i) => `例: ${['毎日楽しく働いてる', '好きなことで稼いでる', '健康でいる'][i]}`}
         />
+
+        {/* 今日の一言 */}
+        <section className="bg-white rounded-2xl p-5 shadow-sm">
+          <h2 className="font-bold text-gray-700 mb-0.5">💬 今日の一言</h2>
+          <p className="text-xs text-gray-400 mb-3">今日を一言で表すと？</p>
+          <textarea
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            placeholder="例: 小さな一歩が大事だと気づいた日"
+            rows={3}
+            className="w-full border border-gray-100 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 bg-gray-50 resize-none"
+          />
+        </section>
 
         {/* 保存ボタン */}
         <button
